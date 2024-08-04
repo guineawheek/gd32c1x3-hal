@@ -1,7 +1,7 @@
 use crate::{pac, gpio::{Floating, Input, Pin}, rcu::{Clocks, Enable}};
 use fugit::HertzU32 as Hertz;
-use gd32_synopsys_usb_otg::UsbPeripheral;
-pub use gd32_synopsys_usb_otg::UsbBus;
+use synopsys_usb_otg::UsbPeripheral;
+pub use synopsys_usb_otg::UsbBus;
 
 pub struct USB {
     pub usb_global: pac::UsbfsGlobal,
