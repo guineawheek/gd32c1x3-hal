@@ -31,8 +31,6 @@ bxcan = { package = "bxcan-ng", version = "0.8.0" }
 synopsys-usb-otg = { package = "gd32-synopsys-usb-otg", version = "0.4.1", features = ["fs"] }
 
 [features]
-default = ["gd32c103"]
-
 gd32c103 = ["gd32c1/gd32c103"]
 gd32c113 = ["gd32c1/gd32c113"]
 critical-section = ["gd32c1/critical-section"]
