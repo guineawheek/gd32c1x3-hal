@@ -67,7 +67,7 @@ impl Flash {
         let fmc: &fmc::RegisterBlock = unsafe { &(*Fmc::ptr()) };
         while fmc.stat().read().busy().bit_is_set() {}
         fmc.ctl().modify(|_, w| w.pg().set_bit());
-        let write_ptr = unsafe {core::mem::transmute::<u32,*mut u32>(Flash::FLASH_BASE + offset) };
+        let write_ptr = unsafe { core::mem::transmute::<usize,*mut u32>((Flash::FLASH_BASE + offset) as usize) };
         unsafe { core::ptr::write_volatile(write_ptr, word); }
         while fmc.stat().read().busy().bit_is_set() {}
         fmc.ctl().modify(|_, w|w.pg().clear_bit());
@@ -78,8 +78,8 @@ impl Flash {
         while fmc.stat().read().busy().bit_is_set() {}
         fmc.ws().modify(|_, w| w.pgw().set_bit());
         fmc.ctl().modify(|_, w| w.pg().set_bit());
-        let write_ptr_l = unsafe {core::mem::transmute::<u32,*mut u32>(Flash::FLASH_BASE + offset) };
-        let write_ptr_h = unsafe {core::mem::transmute::<u32,*mut u32>(Flash::FLASH_BASE + offset + 4) };
+        let write_ptr_l = unsafe { core::mem::transmute::<usize, *mut u32>((Flash::FLASH_BASE + offset) as usize) };
+        let write_ptr_h = unsafe { core::mem::transmute::<usize, *mut u32>((Flash::FLASH_BASE + offset + 4) as usize) };
         let (word0, word1) = ((dword & 0xffffffff) as u32, (dword >> 32) as u32);
         unsafe { core::ptr::write_volatile(write_ptr_l, word0 ); }
         unsafe { core::ptr::write_volatile(write_ptr_h, word1 ); }
@@ -218,21 +218,6 @@ impl NorFlash for Flash
         if r.len() == 4 {
             self.program_word(offset + i, u32::from_ne_bytes(r.try_into().unwrap()));
         }
-
-
-        //if (offset as usize) % 8 == 0 && (bytes.len() % 8) == 0 {
-        //    for i in (0..buf_len).step_by(8) {
-        //        let mut byte_buf = [0u8; 8];
-        //        byte_buf.clone_from_slice(&bytes[i..i+8]);
-        //        self.program_dword(offset + i as u32, u64::from_ne_bytes(byte_buf));
-        //    }
-        //} else {
-        //    for i in (0..buf_len).step_by(4) {
-        //        let mut byte_buf = [0u8; 4];
-        //        byte_buf.clone_from_slice(&bytes[i..i+4]);
-        //        self.program_word(offset + i as u32, u32::from_ne_bytes(byte_buf));
-        //    }
-        //}
         self.lock();
         Ok(())
     }
