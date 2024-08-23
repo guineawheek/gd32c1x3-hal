@@ -174,7 +174,7 @@ dependencies = [
 
 [[package]]
 name = "gd32c1x3-hal"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bitflags",
  "bxcan-ng",

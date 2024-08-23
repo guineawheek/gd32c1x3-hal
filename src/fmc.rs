@@ -170,7 +170,7 @@ impl NorFlash for Flash
 
 
     fn erase(&mut self, from: u32, to: u32) -> Result<(), Self::Error> {
-        if from >= Flash::MAX_ADDR {
+        if from > Flash::MAX_ADDR {
             return Err(Self::Error::OutOfBounds);
         }
 
@@ -200,7 +200,7 @@ impl NorFlash for Flash
             return Err(Self::Error::NotAligned);
         }
 
-        if (offset as usize) + bytes.len() >= Flash::FLASH_SIZE {
+        if (offset as usize) + bytes.len() > Flash::FLASH_SIZE {
             return Err(Self::Error::OutOfBounds);
         }
 
